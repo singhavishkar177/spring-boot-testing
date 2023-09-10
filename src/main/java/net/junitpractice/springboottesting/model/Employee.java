@@ -18,7 +18,7 @@ public class Employee {
     private String firstName;
     @Column(name = "last_name",nullable = false)
     private String lastName;
-    @Column(nullable = false)
+    @Column(name="email",nullable = false)
     private String email;
 
 }
