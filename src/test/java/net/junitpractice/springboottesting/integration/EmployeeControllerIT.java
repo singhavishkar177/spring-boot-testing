@@ -7,8 +7,6 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,14 +16,16 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
+//we don't have to rerite test cases we just have to integrate testcontainers here
+@Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)     //random port because it will start embedded server on random port
 @AutoConfigureMockMvc           ///because we need to mock rest api so auto configure them
-public class EmployeeControllerITest {
+public class EmployeeControllerIT extends AbstractContainerBaseTest {
+    //mysql container object
 
     @Autowired
     MockMvc mockMvc;
@@ -45,6 +45,8 @@ public class EmployeeControllerITest {
     @DisplayName("junit test case for create employee method")
     @Test
     public void givenEmployeeObject_whenCreateEmployee_thenReturnEmployee() throws Exception{
+
+
         //given - precondition or setup
         Employee employee = Employee.builder()
                 .firstName("Avishkar")
@@ -161,8 +163,7 @@ public class EmployeeControllerITest {
     @Test
     public void givenInvalidEmployeeId_whenUpdateEmployee_thenReturnNotfoundError() throws Exception{
         //given - precondition or setup
-        Employee savedEmployee = Employee.builder()
-                .firstName("Avishkar")
+        Employee savedEmployee = Employee.builder().firstName("Avishkar")
                 .lastName("Singh")
                 .email("avishkar@gmail.com")
                 .build();
@@ -172,8 +173,9 @@ public class EmployeeControllerITest {
                 .lastName("Jadhav")
                 .email("ram@gmail.com")
                 .build();
+
         //when - action or behaviour that we are going to test
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.put("/api/employees/{id}",1L)
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.put("/api/employees/{id}",2L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedEmployee)));
         //then - verify the output
